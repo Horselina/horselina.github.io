@@ -306,11 +306,7 @@ C:\Firmware\magisk_patched_250113_xxxx.tar
 3. Connect the USB cable while holding both buttons
 4. Release buttons when the **Download Mode** screen appears
 
-> **Screenshot Placeholder: Download Mode**
-> ```
-> ![Samsung Galaxy F13 showing the Download Mode screen with "Downloading... Do not turn off target" warning](galaxy-f13-download-mode.png)
-> Alt text: Samsung Galaxy F13 in Download Mode screen
-> ```
+![Samsung Galaxy F13 showing the Download Mode screen with "Downloading... Do not turn off target" warning](galaxy-f13-download-mode.png)
 
 The Download Mode screen should show:
 - Model: **SM-E135F**
@@ -320,11 +316,8 @@ The Download Mode screen should show:
 
 ### Configuring Odin
 
-> **Screenshot Placeholder: Odin Interface**
-> ```
-> ![Odin flashing tool](odin_interface.png)
-> Alt text: Odin flashing tool 
-> ```
+![Odin flashing tool](odin_interface.png)
+
 
 I configured Odin as follows:
 
@@ -356,11 +349,8 @@ NAND Write Start!
 4. In the top-left box of Odin, it showed: **"PASS"** in green
 5. Device automatically rebooted
 
-> **Screenshot Placeholder: Odin PASS**
-> ```
->![Odin showing green PASS message in the message box after successful flash](odin-pass-screen.png)
-> Alt text: Odin tool showing successful PASS after flashing Galaxy F13
-> ```
+
+![Odin showing green PASS message in the message box after successful flash](odin-pass-screen.png)
 
 At this point, I thought everything was fine. I was wrong.
 
@@ -382,12 +372,7 @@ After Odin showed "PASS" and the device rebooted, here's what happened:
 4. **Samsung Galaxy logo appeared again**
 5. This cycle **repeated indefinitely**
 
-> **Screenshot Placeholder: Bootloop**
-> ```
-> ![Samsung Galaxy F13 stuck on the Samsung Galaxy boot logo, unable to proceed to Android](samsung_bootloop.jpeg)
-> Alt text: Samsung Galaxy F13 bootloop stuck on Samsung logo
-> ```
-
+ ![Samsung Galaxy F13 stuck on the Samsung Galaxy boot logo, unable to proceed to Android](samsung_bootloop.jpeg)
 
 To actually interrupt the endless bootloop and regain control of the device, I had to change my approach in Odin. During my initial root flash, the **Auto Reboot** option was checked, which instantly kicked the phone back into the bootloop the moment Odin displayed "PASS". To break this cycle, I flashed the stock AP file with **Auto Reboot explicitly unchecked**, which left the phone powered off and gave me the crucial window needed to manually enter Download Mode. However, I quickly discovered that simply holding the hardware buttons on a powered-off device did nothing; Download Mode strictly refused to trigger unless the USB cable was physically plugged in while the volume buttons were held down, making the cable connection a mandatory hardware trigger rather than just a data link.
 ### Diagnosing the Bootloop Cause
@@ -402,13 +387,13 @@ As noted in my device specs, the **SE Status is enforcing**. Security-Enhanced L
 
 Even with OEM unlock enabled, Samsung devices with newer firmware versions may still verify the boot image signature at the **TrustZone** level. The [Android Verified Boot (AVB)](https://source.android.com/docs/security/verifiedboot) specification describes this chain:
 
-```
+
 Verified Boot State:
   - GREEN:   Device is locked + boot image verified → Boot normally
   - ORANGE:  Device is unlocked + boot image unverified → Boot with warning
   - YELLOW:  Device is locked + boot image verification failed → Boot prevented
   - RED:     Device is locked + boot image is corrupt → Boot prevented
-```
+
 
 On my Galaxy F13, the bootloader may have been reporting **ORANGE** state, but TrustZone or Samsung's RKP (Real-time Kernel Protection) could still be rejecting the modified boot image.
 
