@@ -151,7 +151,7 @@ The OEM Unlock toggle, which had previously been unavailable, was finally access
 > **Screenshot Placeholder: OEM Unlock Enabled**
 >
 > ```
-> ![Screenshot showing the OEM Unlock toggle enabled in Developer Options.](samsung-oem-unlock-enabled.png)
+> ![Screenshot showing the OEM Unlock toggle enabled in Developer Options.](samsung_oem_unlock_enabled.png)
 > Alt text: Samsung Developer Options with OEM Unlock available for bootloader unlocking.
 > ```
 
@@ -331,7 +331,7 @@ The Download Mode screen should show:
 
 > **Screenshot Placeholder: Odin Interface**
 > ```
-> ![Odin flashing tool](odin-interface.png)
+> ![Odin flashing tool](odin_interface.png)
 > Alt text: Odin flashing tool 
 > ```
 
