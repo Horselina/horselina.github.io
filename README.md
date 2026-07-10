@@ -290,7 +290,33 @@ I connected the Galaxy F13 to my PC via USB and copied the patched file to my wo
 C:\Firmware\magisk_patched_250113_xxxx.tar
 ```
 
+### Magisk Version Compatibility Issues
 
+One of the less obvious problems I encountered was that **not all Magisk versions successfully patched or booted on my device**. My initial assumption was that using the latest stable release would provide the best compatibility, but that turned out to be incorrect.
+
+After patching the stock `AP` firmware with the newest Magisk release and flashing it through Odin, the device either failed to boot correctly or did not provide a working rooted environment. Since the firmware package, Odin procedure, and bootloader state had already been verified, the issue appeared to be related to **Magisk's compatibility with this specific firmware and boot image** rather than an error in the flashing process.
+
+To isolate the problem, I tested multiple Magisk releases by repeatedly:
+
+1. Extracting the stock `AP` firmware.
+2. Patching it with a different Magisk APK version.
+3. Flashing the patched image using Odin.
+4. Verifying whether the device booted successfully and whether root was functional.
+
+Eventually, an older Magisk release proved to be compatible with my device and firmware, while the latest version consistently failed.
+
+#### Technical Takeaway
+
+- The latest Magisk version is **not always the most compatible choice** for every Samsung firmware.
+- Compatibility depends on factors such as:
+  - Android version
+  - Kernel changes
+  - Boot image format
+  - Samsung-specific boot chain modifications
+  - Magisk's current patching implementation
+- When troubleshooting unexplained boot failures after a seemingly correct flash, **testing multiple Magisk versions should be considered an essential debugging step** rather than assuming the newest release is always the correct one.
+
+This experience reinforced an important lesson: successful rooting is often as much about **version compatibility** as it is about following the correct flashing procedure.
 ---
 
 ## Flashing with Odin: The Process
