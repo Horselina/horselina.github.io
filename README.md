@@ -81,7 +81,7 @@ When I navigated to **Settings → About Phone → Software Information** and ta
 2. **Website Step Verification**: Samsung explicitly directs you to its official website to "follow steps"—essentially a deterrent mechanism.
 3. **Pre-Owned Device Wait Times (Prenormal KG State)**: While this waiting period isn't required for every device, it was necessary in my case. Because my device was a pre-owned global model stuck in a "prenormal" KG (Knox Guard) state, **it had to remain connected to Wi-Fi and a SIM card for 7 days (168 hours)** before the toggle became available. While some people attempt to bypass this timer by manually tweaking the device's date and time settings, I preferred to simply wait it out over a standard SIM-based connection.
  
- ![Screenshot showing the OEM Unlock toggle grayed out in Developer Options](greyed-out.png)
+ ![Screenshot showing the OEM Unlock toggle grayed out in Developer Options](greyed_out.png)
  
 > **Note on Newer Samsung Devices**
 >
@@ -144,12 +144,7 @@ Once the waiting period had elapsed, I rebooted the device and returned to **Dev
 
 The OEM Unlock toggle, which had previously been unavailable, was finally accessible.
 
-> **Screenshot Placeholder: OEM Unlock Enabled**
->
-> ```
-> ![Screenshot showing the OEM Unlock toggle enabled in Developer Options.](samsung_oem_unlock_enabled.png)
-> Alt text: Samsung Developer Options with OEM Unlock available for bootloader unlocking.
-> ```
+![Screenshot showing the OEM Unlock toggle enabled in Developer Options](samsung_oem_unlock_enabled.png)
 
 Enabling the toggle displayed Samsung's warning:
 
