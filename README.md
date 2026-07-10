@@ -80,13 +80,9 @@ When I navigated to **Settings → About Phone → Software Information** and ta
 1. **Samsung Account Requirement**: The toggle is grayed out unless you're logged into a Samsung account on the device.
 2. **Website Step Verification**: Samsung explicitly directs you to its official website to "follow steps"—essentially a deterrent mechanism.
 3. **Pre-Owned Device Wait Times (Prenormal KG State)**: While this waiting period isn't required for every device, it was necessary in my case. Because my device was a pre-owned global model stuck in a "prenormal" KG (Knox Guard) state, **it had to remain connected to Wi-Fi and a SIM card for 7 days (168 hours)** before the toggle became available. While some people attempt to bypass this timer by manually tweaking the device's date and time settings, I preferred to simply wait it out over a standard SIM-based connection.
-
-> **Screenshot Placeholder: OEM Unlock Grayed Out**
-> ```
-> ![Screenshot showing the OEM Unlock toggle grayed out in Developer Options](greyed-out.png)
-> Alt text: Samsung Developer Options showing disabled OEM Unlock toggle
-> ```
-
+ 
+ ![Screenshot showing the OEM Unlock toggle grayed out in Developer Options](greyed-out.png)
+ 
 > **Note on Newer Samsung Devices**
 >
 > This guide applies to Samsung devices that still expose the **OEM Unlock** option. Beginning with **One UI 8 (Android 16)**, Samsung has reportedly removed the bootloader unlocking mechanism[https://sammyguru.com/breaking-samsung-removes-bootloader-unlocking-with-one-ui-8/]() from many Galaxy devices worldwide , including models that were previously unlockable outside North America. Community analysis indicates that this is more than a hidden Developer Option—the bootloader itself no longer contains the code path required to perform an unlock, making conventional rooting and custom ROM installation effectively impossible on updated devices. Users interested in maintaining root access should carefully research their specific model and firmware version before upgrading, as updating to One UI 8 may permanently remove the ability to unlock the bootloader. 
