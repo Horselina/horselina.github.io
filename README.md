@@ -1,10 +1,4 @@
 
----
-layout: post
-title: "Complete Guide: Rooting Samsung Galaxy F13 with Magisk, Odin, and the Bootloop Recovery Journey"
-date: 2026-07-10
----
-
 ***
 
 # Complete Guide: Rooting Samsung Galaxy F13 with Magisk, Odin, and the Bootloop Recovery Journey
