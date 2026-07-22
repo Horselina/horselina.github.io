@@ -1,0 +1,25 @@
+title: Horselina
+description: Experiments on Android kernel security, mistakes and learnings.
+url: https://horselina.github.io
+baseurl: ""
+
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Posts live in _posts/ but are published under /blog/<category>/<slug>/
+permalink: /blog/:categories/:title/
+
+header_pages:
+  - about.md
+  - blog/index.md
+
+exclude:
+  - README.md
+  - Untitled.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

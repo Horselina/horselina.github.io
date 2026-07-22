@@ -1,0 +1,15 @@
+# Jekyll build output
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+# Local Ruby deps (GitHub Pages builds server-side; these are for local preview only)
+Gemfile.lock
+vendor/
+.bundle/
+
+# Obsidian vault config (lives at vault root, but keep it out if it ever lands here)
+.obsidian/
+
+# Scratch
+Untitled.md
