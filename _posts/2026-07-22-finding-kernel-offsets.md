@@ -1,4 +1,12 @@
-```markdown
+---
+layout: post
+title: "Porting Local Privilege Escalation Research"
+date: 2026-07-22
+category: android
+tags: [android, kernel, lpe, mali, selinux, offsets]
+description: "A deep dive into the challenges of porting Android kernel LPE research from a Google Pixel to a Realme 6, highlighting OEM symbol changes and static versus dynamic analysis."
+---
+
 # Porting Local Privilege Escalation Research
 
 If you spend enough time in the Android security community, you’ll notice a recurring theme: most local privilege escalation (LPE) proof-of-concepts (PoCs) are written for Google Pixels. They are the standard testbeds. Their kernels are close to AOSP, the offsets are predictable, and the symbol names are consistent. 
@@ -117,4 +125,3 @@ unsigned long avc_denied_addr = find_symbol("avc_deny", "avc_denied", AVC_DENIED
 My main takeaway from this whole process is that porting vulnerability research from a Pixel to an OEM device isn't just a 1:1 translation of hex values. It requires understanding the intent of the target kernel. 
 
 I realized that relying solely on released source code can be misleading. I also learned that SoC vendors like MediaTek will silently rename critical security functions—changing a simple `avc_deny` to `avc_denied`. But most importantly, I learned that if you understand the core mechanics of Linux privilege escalation—targets like `init_cred` and `selinux_enforce`—you can adapt your research methodology to work around whatever obscure modifications the OEM decided to implement.
-```
