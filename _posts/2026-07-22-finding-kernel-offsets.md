@@ -11,9 +11,9 @@ description: "A deep dive into the challenges of porting Android kernel LPE rese
 
 If you spend enough time in the Android security community, you’ll notice a recurring theme: most local privilege escalation (LPE) proof-of-concepts (PoCs) are written for Google Pixels. They are the standard testbeds. Their kernels are close to AOSP, the offsets are predictable, and the symbol names are consistent. 
 
-But what happens when you take a well-documented Pixel PoC and point it at a mid-range device like a Realme 6? I learned firsthand while analyzing Man Yue Mo’s excellent Mali GPU research that the transition is rarely straightforward. 
+But what happens when you take a well-documented Pixel PoC and point it at a mid-range device like a Realme 6? I learned firsthand while analyzing [*Man Yue Mo’s excellent Mali GPU research*](https://github.blog/author/mymo/) that the transition is rarely straightforward. 
 
-What started as a task of simply updating a few memory offsets turned into a much steeper learning curve than I anticipated. Here is a breakdown of how I traced the necessary kernel symbols across three different approaches, and how a single missing letter—`avc_deny` vs `avc_denied`—taught me a lot about OEM kernel modifications.
+What started as a task of simply updating a few memory offsets turned into a much steeper learning curve than I anticipated. Here is a breakdown of how I traced the necessary kernel symbols across three different approaches, and how a missing letters—`avc_deny` vs `avc_denied`—taught me a lot about OEM kernel modifications.
 
 ## The Destination vs. The Journey
 
