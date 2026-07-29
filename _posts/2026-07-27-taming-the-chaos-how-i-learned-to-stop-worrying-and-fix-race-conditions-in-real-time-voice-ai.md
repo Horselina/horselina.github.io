@@ -2,7 +2,7 @@
 layout: post
 title: "taming the chaos: how i learned to stop worrying and fix race conditions in real-time voice ai"
 date: 2026-07-27
-category: android
+category: ai-workflows
 tags: [race conditions, real-time voice ai]
 description: "summary of a learning experience with fixing race conditions."
 ---
