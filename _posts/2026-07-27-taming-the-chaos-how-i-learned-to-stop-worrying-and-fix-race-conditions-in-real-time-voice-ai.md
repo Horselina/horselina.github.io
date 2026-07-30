@@ -24,7 +24,15 @@ To understand the problem, you have to understand the pieces I strung together. 
 4. `Noise Floor Detection & Adaptation`: To dynamically adjust the silence threshold based on the user’s environment (e.g., a quiet office vs. a busy coffee shop).
 5. `TTS (Text-to-Speech) Firing`: The final step to speak the AI’s response.
 
-On paper, these components complemented each other. In practice, they were like five different orchestras trying to play in the same room without a conductor.
+On paper, these components complemented each other. In practice, they were like five different orchestras trying to play in the same room without a conductor. Here's the actual kickoff — three of these five, wired to fire at once, on every single recording:
+
+```ts
+// frontend/src/pages/VoiceInterview.tsx
+recognitionRef.current = recognition;
+try { recognition.start(); } catch (err) { }
+startWhisperChunkStreaming();
+detectSilence(stream);
+```
 
 ### **The Nightmare**
 
@@ -36,6 +44,35 @@ Meanwhile, `Whisper` was still processing the audio chunk, waiting to send its f
 Before `Whisper` could finish, the LLM would generate a response based on the partial text, and the `TTS` would fire. Suddenly, the chatbot was talking over the user who was actually still speaking.
 It was a classic race condition: multiple asynchronous processes with shared state (the user's microphone input and the conversation context) and no strict locking mechanism. The timing was so fragile that a slight change in the user’s background noise would completely break the flow.
 
+The smoking gun, once I went looking for it: the same "did the user just say they're done?" check existed in two independent places, each free to act on its own. Web Speech's version, checked on every recognition result:
+
+```ts
+// frontend/src/pages/VoiceInterview.tsx — inside recognition.onresult
+const matchedPhrase = STOP_PHRASES.find(p =>
+  (lower === p || new RegExp('(^|\\b)' + p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$').test(lower))
+);
+if (matchedPhrase && confidence >= 0.7) {
+  // ...
+  shouldStop = true;
+}
+// ...
+if (shouldStop) {
+  finalizeAnswer();
+}
+```
+
+And Whisper's version, checked independently every 4 seconds against whatever had accumulated in the chunk poll:
+
+```ts
+// frontend/src/pages/VoiceInterview.tsx — inside startWhisperChunkStreaming
+const STOP_PHRASES = ["that's my response", "that is my response", "i am done", "i'm done", "that's all", "that is all", "done speaking", "that's it"];
+if (grew && STOP_PHRASES.some(p => lower.endsWith(p))) {
+  finalizeAnswer();
+}
+```
+
+Two separate implementations of the same decision, neither aware the other existed, both able to call `finalizeAnswer()` whenever they felt like it.
+
 ## Phase 1: The "Hit-and-Trial" Swamp
 
 I didn’t immediately see the architectural flaw. Instead, I entered the hit-and-trial phase—the dark forest of every developer's imposter syndrome.
@@ -45,8 +82,38 @@ I started playing whack-a-mole with the code.
 - If the noise adaptation was too slow, I manually tweaked the decibel threshold offsets.
 - I tried debouncing the Web Speech API events.
 
+The threshold-tweaking wasn't hand-waving — here's what the ambient-noise tracking actually looked like, decaying at different rates depending on whether someone was mid-sentence or not:
+
+```ts
+// frontend/src/utils/audioVAD.ts
+const SPEECH_RATIO = config.speechRatio ?? 3.0;
+const MIN_ABS_SPEECH_RMS = config.minAbsSpeechRms ?? 0.01;
+const CALIBRATION_MS = config.calibrationMs ?? 800;
+// ...
+if (!speechStarted) {
+  // Pre-speech: track ambient quickly so the noise floor settles.
+  noiseFloor = noiseFloor * 0.95 + rms * 0.05;
+} else if (!isSpeech) {
+  // Post-speech silence: track rising noise slowly so we don't lose the speaker.
+  noiseFloor = noiseFloor * 0.98 + rms * 0.02;
+}
+```
+
 It was a hybrid approach born of necessity: part scientific method, part blind luck. I would change a variable, deploy it, and test it in my quiet home office. It would work! I’d celebrate. Then, I’d take my laptop to a café, and the ambient noise would completely derail the noise floor adaptation, causing the silence detection to never trigger, leaving the user staring at a blinking mic icon forever.
 I had built a house of cards. I was humbled. It became clear that patching individual thresholds couldn’t fix a fundamental state-management issue.
+
+The closest I got to a real fix at this stage wasn't tuning a number — it was admitting the three triggers could never be trusted to stay mutually exclusive on their own, and bolting a lock onto the one thing they all funneled into:
+
+```ts
+// frontend/src/pages/VoiceInterview.tsx
+const finalizeAnswer = () => {
+  if (finalizeLockRef.current) return;
+  finalizeLockRef.current = true;
+  // ... stop recognition, clear every interval, stop the recorder
+};
+```
+
+It worked, in the sense that duplicate finalizations stopped happening. But a lock around the symptom is not the same as removing the race — it just made the collision harder to notice.
 
 ### Phase 2: The Methodical Pivot
 
