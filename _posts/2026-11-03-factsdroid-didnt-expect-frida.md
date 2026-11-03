@@ -124,10 +124,6 @@ With this I was able to bypass root detection and get app running on emulator.
 
 SSL pinning is implemented in BoringSSL function in libflutter.so" . The idea is to force it tor return 1. Problem is to find its offset from the .so file so that wecan rewrite its implementation. So I tried fingerprinting technique  - find the function which uses strings "ssl_Client" , "ssl_server". Then find the code pointing at them – lea[rip + d] . 
 
-I used a python script to locate the offset from the elf file. Here are the key code snippets: 
-
-targets = set() for name in (b'ssl_client\x00', b'ssl_server\x00'): i = data.find(name) while i != -1: va = foff_to_vaddr(i) if va is not None: targets.add(va) i = data.find(name, i + 1) _________________________________________________________________ tb = data[toff:toff + tsize] refs = [] i, n = 0, len(tb) while i < n - 7: if tb[i] in (0x48, 0x4C, 0x44, 0x4D) and tb[i+1] == 0x8D and (tb[i+2] & 0xC7) == 0x05: disp = int.from_bytes(tb[i+3:i+7], 'little', signed=True) instr_va = tstart + i target = instr_va + 7 + disp if target in targets: refs.append((instr_va, target)) i += 1 for instr_va, sv in refs: print(f"lea @ 0x{instr_va:x} -> string 0x{sv:x}") 
-
 I found the offset at 0x7d886b relevant for the x86_64 arch. So I added to my frida script - `Interceptor.attach(Module.findBaseAddress('libflutter.so').add(0x7d886b), { onLeave: function (r) { r.replace(0x1); } })` 
 
 # **<u>8. Performing MITM</u>** 
