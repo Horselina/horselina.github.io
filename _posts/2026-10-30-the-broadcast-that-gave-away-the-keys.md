@@ -31,9 +31,9 @@ description: "An exported, unprotected broadcast receiver in AndroPseudoProtect 
 
 - ii.     No runtime permissions to be taken from victim 
 
-iii.     Only permissions allowed are external storage and notification permissions 
+- iii.     Only permissions allowed are external storage and notification permissions 
 
-iv.     Extracted tokens not to be hardcoded in POC but extracted and used dynamically at runtime 
+- iv.     Extracted tokens not to be hardcoded in POC but extracted and used dynamically at runtime 
 
 # **3.  TL;DR:** 
 
