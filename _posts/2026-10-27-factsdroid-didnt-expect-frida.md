@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "FactsDroid Didn't Expect Frida"
-date: 2026-11-03
+date: 2026-10-27
 category: android
 tags: [android, frida, ssl-pinning, flutter, mitm, burp-suite, ctf, 8ksec]
 description: "Bypassing root detection and SSL pinning in a Flutter-based Android app to MITM its traffic through Burp Suite, since Flutter ignores the system proxy and Android CA store entirely."

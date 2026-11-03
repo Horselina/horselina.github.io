@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Broadcast That Gave Away the Keys"
-date: 2026-11-03
+date: 2026-10-30
 category: android
 tags: [android, ipc, broadcast-receiver, intent, exploitation, ctf, 8ksec]
 description: "An exported, unprotected broadcast receiver in AndroPseudoProtect leaks its security token in intent extras, letting any app on the device silently disable encryption and read files meant to stay protected."
