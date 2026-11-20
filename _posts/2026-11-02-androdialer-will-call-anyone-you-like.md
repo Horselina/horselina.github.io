@@ -51,7 +51,7 @@ I come across "com.eightksec.androdialer.CallHandlerServiceActivity", which is e
 ![](/assets/images/androdialer-confused-deputy/8ksec_ch3.pdf-0001-16.png)
 
 
-- I find that CallHandlerServiceActivity OnCreate function tries to read "enterprise_auth_token" from the incoming intent, whether it be from another app or web uri etc. The value of the token however is surprisingly hard-coded "8kd1aL3R-s3Cur3-k3Y-2023". 
+- I find that CallHandlerServiceActivity OnCreate function tries to read "enterprise_auth_token" from the incoming intent, whether it be from another app or web uri etc. The value of the token however is surprisingly hard-coded "[REDACTED]". 
 
 
 ![](/assets/images/androdialer-confused-deputy/8ksec_ch3.pdf-0002-01.png)
